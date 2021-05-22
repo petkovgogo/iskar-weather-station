@@ -51,8 +51,6 @@ const char *WeatherStation::assembleURL()
             m_sensors.getBME280DataAsHttpString(),
             m_sensors.getPrecipDataAsHttpString());
 
-    Serial.println(url);
-
     return url;
 }
 
@@ -63,8 +61,6 @@ const char *WeatherStation::generateSalt() const
 
     memset(salt, 0, sizeof(salt));
     sprintf(salt, "%ld", static_cast<long int>(std::time(nullptr))); // generate timestamp
-
-    Serial.println(salt);
 
     return salt;
 }
@@ -91,8 +87,6 @@ const char *WeatherStation::generateHash(const char *salt) const
     {
         sprintf(hash + (i * 2), "%02x", buffer[i]);
     }
-
-    Serial.println(hash);
 
     return hash;
 }
