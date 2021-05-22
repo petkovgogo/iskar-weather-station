@@ -17,6 +17,23 @@ SensorDataProcessor &SensorDataProcessor::operator=(const SensorDataProcessor &w
     return *this;
 }
 
+const char *SensorDataProcessor::getWindDataAsHttpString()
+{
+    const size_t BUFF_SIZE = 50;
+
+    static char httpString[BUFF_SIZE];
+
+    memset(httpString, 0, sizeof(httpString));
+    sprintf(httpString, // TODO add real wind sensor data
+            "wind_avg=%.2f&wind_max=%.2fwind_min=%.2fwind_direction=%d",
+            0.0, // [knots]
+            0.0, // [knots]
+            0.0, // [knots]
+            0);  // [°]
+
+    return httpString;
+}
+
 const char *SensorDataProcessor::getBME280DataAsHttpString()
 {
     const size_t BUFF_SIZE = 50;

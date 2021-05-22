@@ -8,6 +8,7 @@ BME280Sensor::BME280Sensor()
       m_avgHumidity(0.0),
       m_avgPressure(0.0)
 {
+    sample();
     m_bme280.begin();
 }
 
@@ -53,15 +54,24 @@ void BME280Sensor::sample()
 
 float BME280Sensor::getAvgTemperature()
 {
-    return m_avgTemperature /= SAMPLE_INTERVAL / SAMPLE_RATE;
+    float temp = m_avgTemperature / (SAMPLE_INTERVAL / SAMPLE_RATE);
+    m_avgTemperature = 0;
+
+    return temp;
 }
 
 float BME280Sensor::getAvgHumidity()
 {
-    return m_avgHumidity /= SAMPLE_INTERVAL / SAMPLE_RATE;
+    float temp = m_avgHumidity / (SAMPLE_INTERVAL / SAMPLE_RATE);
+    m_avgHumidity = 0;
+
+    return temp;
 }
 
 float BME280Sensor::getAvgPressure()
 {
-    return m_avgPressure /= SAMPLE_INTERVAL / SAMPLE_RATE;
+    float temp = m_avgPressure / (SAMPLE_INTERVAL / SAMPLE_RATE);
+    m_avgPressure = 0;
+
+    return temp;
 }

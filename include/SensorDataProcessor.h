@@ -12,6 +12,7 @@ public:
 
     SensorDataProcessor &operator=(const SensorDataProcessor &);
 
+    const char *getWindDataAsHttpString();
     const char *getBME280DataAsHttpString();
     const char *getPrecipDataAsHttpString();
 
