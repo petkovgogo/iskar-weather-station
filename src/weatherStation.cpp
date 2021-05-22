@@ -5,7 +5,7 @@
 #include <md5.h>
 
 WeatherStation::WeatherStation(const char *uid, const char *passw)
-    : m_uid(uid), m_passw(passw) {}
+    : m_uid(uid), m_passw(passw), m_sensors() {}
 
 WeatherStation::WeatherStation(const WeatherStation &ws)
     : m_uid(ws.m_uid), m_passw(ws.m_passw), m_sensors(ws.m_sensors) {}
@@ -43,15 +43,15 @@ const char *WeatherStation::assembleURL()
     const char *hash = generateHash(salt);
 
     memset(url, 0, sizeof(url));
-    sprintf(url,
-            "%suid=%s&salt=%s&hash=%s&%s&%s%s",
-            API_UPLOAD_URL,
-            m_uid,
-            salt,
-            hash,
-            "test_wind",
+    sprintf(url, "%suid=%s&salt=%s&hash=", API_UPLOAD_URL, m_uid, salt);
+    strcat(url, hash);
+    sprintf(url + (strlen(url)),
+            "&%s&%s%s",
+            m_sensors.getWindDataAsHttpString(),
             m_sensors.getBME280DataAsHttpString(),
             m_sensors.getPrecipDataAsHttpString());
+
+    Serial.println(url);
 
     return url;
 }
@@ -61,10 +61,10 @@ const char *WeatherStation::generateSalt() const
     const size_t SALT_LEN = 15;
     static char salt[SALT_LEN];
 
-    std::time_t currTime = std::time(nullptr);
-
     memset(salt, 0, sizeof(salt));
-    strcpy(salt, std::asctime(std::localtime(&currTime))); // generate timestamp
+    sprintf(salt, "%ld", static_cast<long int>(std::time(nullptr))); // generate timestamp
+
+    Serial.println(salt);
 
     return salt;
 }
@@ -85,12 +85,14 @@ const char *WeatherStation::generateHash(const char *salt) const
     MD5Update(&ctx, reinterpret_cast<const uint8_t *>(m_passw), strlen(m_passw));
     MD5Final(buffer, &ctx);
 
-    memset(hash, 0, strlen(hash));
+    memset(hash, 0, sizeof(hash));
 
     for (size_t i = 0; i < BUFF_SIZE; i++)
     {
         sprintf(hash + (i * 2), "%02x", buffer[i]);
     }
+
+    Serial.println(hash);
 
     return hash;
 }
