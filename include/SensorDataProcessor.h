@@ -1,8 +1,7 @@
 #ifndef SENSOR_DATA_PROCESSOR_H
 #define SENSOR_DATA_PROCESSOR_H
 
-#include <Wire.h>
-#include <BME280_t.h>
+#include "BME280Sensor.h"
 
 class SensorDataProcessor
 {
@@ -16,11 +15,9 @@ public:
     const char *getBME280DataAsHttpString();
     const char *getPrecipDataAsHttpString();
 
-    // TODO Add other sensor httpstrings
-
 private:
 
-    BME280<> m_bme280;
+    BME280Sensor m_bme280;
 
     // TODO Add other sensors
 };
